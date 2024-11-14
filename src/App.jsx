@@ -7,10 +7,9 @@ function App() {
   const [ecom, setEcom] = useState([]);
   const [filterEcom, setFilterEcom] = useState([]);
   const [search, setSearch] = useState("");
-  const [open, setOpen] = useState(null)
+  const [open, setOpen] = useState(null);
 
   const items = ["T-shirt", "Pant", "Hoodies", "Sweat-shirt", "sneakers"];
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,39 +49,45 @@ function App() {
         </button>
       </div>
 
-      <div className="flex">
-        <div className="w-fit">
-          {
-            items.map((item, index) => (
-                <Categories  key={index} title={item} open={index === open} setOpen={() =>  setOpen((prevOpen) => (prevOpen === index ? null : index))}/>
-            ))
-          }
+      <div className="flex gap-8">
+        <div className="my-5">
+          {items.map((item, index) => (
+            <Categories
+              key={index}
+              title={item}
+              open={index === open}
+              setOpen={() =>
+                setOpen((prevOpen) => (prevOpen === index ? null : index))
+              }
+            />
+          ))}
         </div>
-      
-        <div className="flex items-center space-x-2 p-4">
-          <input
-            onChange={(e) => setSearch(e.target.value)}
-            value={search}
-            type="text"
-            placeholder="Search your favorite..."
-            className="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-          />
+        <div className="">
+          <div className="flex items-center space-x-2 p-4">
+            <input
+              onChange={(e) => setSearch(e.target.value)}
+              value={search}
+              type="text"
+              placeholder="Search your favorite..."
+              className="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            />
 
-          <button className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-r-md transition duration-300 ease-in-out">
-            Search
-          </button>
-        </div>
+            <button className="bg-indigo-500 hover:bg-indigo-600 text-white font-semibold py-2 px-4 rounded-r-md transition duration-300 ease-in-out">
+              Search
+            </button>
+          </div>
 
-        <div className="m-5 flex flex-wrap gap-4">
-          {filterEcom
-            .slice(0, 10)
-            .map((product) =>
-              product.price >= 55 ? (
-                <HOF products={product} />
-              ) : (
-                <ProductCard key={product.id} products={product} />
-              )
-            )}
+          <div className="m-5 flex flex-wrap gap-4">
+            {filterEcom
+              .slice(0, 10)
+              .map((product) =>
+                product.price >= 55 ? (
+                  <HOF products={product} />
+                ) : (
+                  <ProductCard key={product.id} products={product} />
+                )
+              )}
+          </div>
         </div>
       </div>
     </>

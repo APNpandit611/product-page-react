@@ -7,7 +7,7 @@ const Categories = ({ title, open, setOpen }) => {
   };
   return (
     <div>
-      <div className="flex justify-between gap-3 ">
+      <div className="flex justify-between gap-3 mx-4 my-1 w-full">
         <h1 className="text-grey-600">{title}</h1>
         <button
           onClick={isOpen}
