@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ProductCard, { BestSellerCard } from "./component/ProductCard";
 import Categories from "./component/Categories";
 import CategoryItem from "./component/CategoryItem";
+import { useSelector } from "react-redux";
 
 function App() {
   const [ecom, setEcom] = useState([]);
@@ -10,7 +11,6 @@ function App() {
   const [open, setOpen] = useState(null);
 
   const items = ["T-shirt", "Pant", "Hoodies", "Sweat-shirt", "sneakers"];
-
   useEffect(() => {
     const fetchData = async () => {
       const rawData = await fetch("https://api.escuelajs.co/api/v1/products");
@@ -35,6 +35,8 @@ function App() {
 
   const HOF = BestSellerCard(ProductCard);
 
+  const cartItems = useSelector((store) => store.cart.cartItems);
+
   return (
     <>
       <div className="flex flex-row justify-between items-center px-10 py-4 text-white shadow-lg rounded-md">
@@ -46,6 +48,10 @@ function App() {
           className="border border-indigo-500 px-4 py-2 font-semibold rounded-md text-indigo-500 hover:bg-indigo-500 hover:text-white transition duration-300 ease-in-out transform hover:scale-105"
         >
           Cheap First
+        </button>
+
+        <button className="border broder-gray-600 rounded-md p-2 text-black">
+          Count - {cartItems.length}
         </button>
       </div>
 
@@ -87,6 +93,16 @@ function App() {
                   <ProductCard key={product.id} products={product} />
                 )
               )}
+          </div>
+          <div>
+            <h2>Cart Items:</h2>
+            {
+              cartItems.map((item, index) => (
+                <div key={index}>
+                  <p>{item}</p>
+                </div>
+              ))
+            }
           </div>
         </div>
       </div>
