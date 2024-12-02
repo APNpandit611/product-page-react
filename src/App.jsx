@@ -3,12 +3,15 @@ import ProductCard, { BestSellerCard } from "./component/ProductCard";
 import Categories from "./component/Categories";
 import CategoryItem from "./component/CategoryItem";
 import { useSelector } from "react-redux";
+import { useGoogleLogin, googleLogout } from "@react-oauth/google";
+import { jwtDecode } from "jwt-decode";
 
 function App() {
   const [ecom, setEcom] = useState([]);
   const [filterEcom, setFilterEcom] = useState([]);
   const [search, setSearch] = useState("");
   const [open, setOpen] = useState(null);
+  const [isLoggedIn, setIsloggedIn] = useState(false);
 
   const items = ["T-shirt", "Pant", "Hoodies", "Sweat-shirt", "sneakers"];
   useEffect(() => {
@@ -37,6 +40,31 @@ function App() {
 
   const cartItems = useSelector((store) => store.cart.cartItems);
 
+  const login = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      const accessToken = tokenResponse.access_token;
+
+      // Fetch the user info using the access token
+      const response = await fetch(
+        "https://www.googleapis.com/oauth2/v3/userinfo",
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      );
+      const userInfo = await response.json();
+      console.log("User Info:", userInfo);
+      setIsloggedIn(true); // Logs the user's profile information
+    },
+    scope: "openid profile email", // Ensures you get access to profile and email information
+  });
+
+  const logout = () => {
+    googleLogout();
+    setIsloggedIn(false);
+  };
+
   return (
     <>
       <div className="flex flex-row justify-between items-center px-10 py-4 text-white shadow-lg rounded-md">
@@ -49,10 +77,16 @@ function App() {
         >
           Cheap First
         </button>
-
         <button className="border broder-gray-600 rounded-md p-2 text-black">
           Count - {cartItems.length}
         </button>
+        {isLoggedIn ? (
+          <button onClick={logout} className="text-black">Log out</button>
+        ) : (
+          <button onClick={() => login()} className="text-black">
+            Log in
+          </button>
+        )}
       </div>
 
       <div className="flex gap-8">
@@ -96,13 +130,11 @@ function App() {
           </div>
           <div>
             <h2>Cart Items:</h2>
-            {
-              cartItems.map((item, index) => (
-                <div key={index}>
-                  <p>{item}</p>
-                </div>
-              ))
-            }
+            {cartItems.map((item, index) => (
+              <div key={index}>
+                <p>{item}</p>
+              </div>
+            ))}
           </div>
         </div>
       </div>

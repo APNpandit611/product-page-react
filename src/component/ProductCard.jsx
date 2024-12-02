@@ -6,7 +6,7 @@ const ProductCard = (props) => {
   const dispatch = useDispatch()
 
   const handleDispatch = () => {
-    dispatch(addItem(title))
+    dispatch(addItem(id))
   }
   return (
     <div>
